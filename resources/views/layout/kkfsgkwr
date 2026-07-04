@@ -1,0 +1,11 @@
+@auth
+  @if(auth()->user()->role == 'admin')
+    @include('partials.sidebar-admin')
+  @elseif(auth()->user()->role == 'manajer')
+    @include('partials.sidebar-manajer')
+  @elseif(auth()->user()->role == 'sopir')
+    @include('partials.sidebar-sopir')
+  @elseif(auth()->user()->role == 'owner')
+    @include('partials.sidebar-owner')
+  @endif
+@endauth

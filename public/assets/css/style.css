@@ -1,0 +1,268 @@
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600&display=swap");
+
+:root {
+    /*========== Colors ==========*/
+    /*Color mode HSL(hue, saturation, lightness)*/
+    --first-color: hsl(0, 94%, 44%);
+    --title-color: hsl(187, 92%, 15%);
+    --text-color: hsl(230, 12%, 40%);
+    --hover-color: hsl(0, 76%, 37%);
+    --container-color: hsl(0, 0%, 100%);
+
+    /*========== Font weight ==========*/
+    --font-regular: 400;
+    --font-medium: 500;
+    --font-semi-bold: 600;
+
+    /*========== Box Shadow ==========*/
+    --shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+    /*========== z index ==========*/
+    --z-fixed: 100;
+}
+
+body {
+    height: 100%;
+    font-family: "Syne", Helvetica;
+}
+
+/*========== Navbar ==========*/
+.nav-item .nav-link {
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 5px;
+    font-weight: var(--font-semi-bold);
+    transition: color 0.4s ease;
+}
+.nav-item .nav-link.active {
+    color: var(--first-color);
+}
+.navbar {
+    background-color: var(--container-color);
+}
+:is(.nav-item, .nav-link):hover {
+    color: var(--first-color);
+}
+/*========== Navbar End ==========*/
+
+/*========== Search ==========*/
+.nav__search {
+    font-size: 22px;
+    color: var(--title-color);
+    cursor: pointer;
+    transition: color 0.4s;
+    margin-right: 20px;
+}
+:is(.nav__search):hover {
+    color: var(--first-color);
+}
+.search {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    margin-right: 13px;
+    background-color: hsla(230, 75%, 15%, 0.3);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px); /* Untuk Safari */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s;
+    z-index: 9999;
+}
+
+/* Search Form */
+.search__form {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 600px;
+    margin-top: -300px;
+}
+.search__icon {
+    font-size: 1.6rem;
+    color: black;
+    margin-right: 0.8rem;
+    margin-left: 0.3rem;
+}
+.search__input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: black;
+    font-size: 1.1rem;
+}
+.search__input::placeholder {
+    color: var(--text-color);
+}
+.search__close {
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    margin-top: -500px;
+    font-size: 40px;
+    color: black;
+    cursor: pointer;
+}
+.search__close:hover {
+    color: var(--text-color);
+}
+
+/* Show Search Form */
+.show-search {
+    opacity: 1;
+    pointer-events: initial;
+}
+/*========== Search End ==========*/
+
+/*========== Beranda ==========*/
+#hero {
+    background-image: url("../../assets/images/halaman_depan.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 600px;
+}
+.hero-title {
+    padding-top: 180px;
+}
+.deskripsi p {
+    font-size: 18px;
+    font-family: Helvetica;
+}
+
+/* responsive layar kecil untuk hero-text */
+@media screen and (min-width: 450px) {
+    .hero-text {
+        font-size: 35px;
+        font-weight: 600;
+    }
+}
+@media screen and (min-width: 550px) {
+    .hero-text {
+        font-size: 35px;
+        font-weight: 600;
+    }
+}
+@media screen and (min-width: 800px) {
+    .hero-text {
+        font-size: 50px;
+        font-weight: 500;
+    }
+}
+@media screen and (min-width: 950px) {
+    .hero-text {
+        font-size: 65px;
+        font-weight: 600;
+    }
+}
+/* Visi Misi di Beranda */
+.stripe {
+    height: 5px;
+    width: 40px;
+    background-color: var(--first-color);
+}
+.visi p,
+.misi p {
+    font-family: Helvetica;
+}
+/*========== Beranda End ==========*/
+
+/*========== Video ==========*/
+.judul-video h6 {
+    font-family: Helvetica;
+    font-weight: var(--font-medium);
+    padding: 5px;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    text-transform: capitalize;
+    overflow-wrap: break-word; /* Alternatif pembungkus teks */
+}
+/*========== Video End ==========*/
+
+/*========== Foto ==========*/
+.foto-dokumentasi:hover img {
+    transform: scale(1.02);
+}
+.foto-dokumentasi img {
+    object-fit: cover;
+    width: 100%; /* Pastikan gambar memenuhi lebar card */
+    height: auto;
+    transition: transform 0.2s ease-in-out;
+}
+.foto-dokumentasi {
+    overflow: hidden;
+    font-family: Helvetica;
+}
+/*========== Foto End ==========*/
+
+/*========== Profil ==========*/
+.box-photo {
+    position: relative;
+    width: auto; /* Lebar fleksibel */
+    min-width: 200px; /* Batas minimum */
+    max-width: 250px;
+    min-height: 250px;
+    height: auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 55px auto;
+    flex-grow: 1;
+    transition: transform 0.3s ease-in-out;
+}
+.box-photo:hover {
+    box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.15);
+    transform: scale(1.02);
+}
+.card-foto {
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 15px 35px -15px rgba(0, 0, 0, 0.5),
+        0 5px 20px 0 rgba(0, 0, 0, 0.1);
+}
+.card-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.box-photo p {
+    letter-spacing: 0.5px;
+    text-align: center;
+    font-weight: var(--font-medium);
+    font-family: Helvetica;
+    overflow-wrap: break-word; /* Membungkus teks */
+}
+.box-photo .name {
+    overflow-wrap: break-word; /* Membungkus teks */
+    font-size: 1.2rem;
+    font-weight: var(--font-semi-bold);
+    letter-spacing: 0.5px;
+    margin-top: 80px;
+    text-transform: capitalize;
+}
+/*========== Profil End ==========*/
+
+/*========== Modul ==========*/
+.modul-rapat {
+    font-family: Helvetica;
+}
+/*========== Modul End ==========*/

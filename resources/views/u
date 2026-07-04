@@ -1,0 +1,67 @@
+@extends('layout.main')
+
+@section('content')
+<div class="container">
+    <h2>Data Transaksi Keuangan</h2>
+    <a href="{{ route('transaksi-keuangan.create') }}" class="btn btn-primary mb-3">Tambah Transaksi</a>
+
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Tanggal</th>
+                <th>Sumber</th>
+                <th>Nominal</th>
+                <th>Keterangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($transaksis as $transaksi)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $transaksi->tanggal }}</td>
+                    <td>{{ $transaksi->sumber }}</td>
+                    <td>Rp{{ number_format($transaksi->nominal, 0, ',', '.') }}</td>
+                    <td>{{ $transaksi->keterangan }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+@endsection
+
+
+
+
+
+public function create()
+    {
+        $sopirs = Sopir::all();
+        $truks = Truk::all();
+        return view('perbaikan.create', compact('sopirs', 'truks'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'sopir_id' => 'required|exists:sopirs,id',
+            'truk_id' => 'required|exists:truks,id',
+            'keluhan' => 'required|string',
+            'status' => 'required|string',
+            'foto' => 'nullable|image|max:2048',
+            'tanggal_perbaikan' => 'required|date',
+        ]);
+
+        if ($request->hasFile('foto')) {
+            $path = $request->file('foto')->store('perbaikan_foto', 'public');
+            $validated['foto'] = $path;
+        }
+
+        Perbaikan::create($validated);
+
+        return redirect()->route('perbaikan')->with('success', 'Data perbaikan berhasil ditambahkan');
+    }
