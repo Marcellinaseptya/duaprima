@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Manajer;
 
 use App\Http\Controllers\Controller;
 use App\Models\TripPulang;
@@ -29,7 +29,7 @@ class TripPulangController extends Controller
         $trips = $query->latest()->paginate(10);
         $sopirs = Sopir::all();
 
-        return view('admin.trippulang.index', compact('trips', 'sopirs'));
+        return view('manajer.trippulang.index', compact('trips', 'sopirs'));
     }
 
     // Setujui Biaya Lapangan

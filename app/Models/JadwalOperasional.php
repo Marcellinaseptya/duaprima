@@ -27,6 +27,8 @@ class JadwalOperasional extends Model
         'catatan',
         'status',
         'alasan_batal',
+        'uang_jalan',
+        'rit_ke'
     ];
 
     // Relasi ke Sopir

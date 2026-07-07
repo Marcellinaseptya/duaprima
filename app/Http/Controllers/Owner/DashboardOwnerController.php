@@ -30,13 +30,11 @@ class DashboardOwnerController extends Controller
         $totalPengeluaran    = Transaksi::where('jenis', 'pengeluaran')->sum('jumlah');
         $totalPinjamanSopir  = Peminjaman::where('status', 'Belum Lunas')->sum('jumlah');
 
-        // Total dari Trip / Ritase
-        $ritases = Ritase::all(); // ambil semua ritase sebagai Collection
-        $totalPendapatan = $ritases->sum(function($r){
-            return ($r->ritase * $r->tarif_per_rit + $r->bonus) - $r->biaya_bbm;
-        });
-        $totalGajiSopir = $ritases->sum('total_gaji_sopir');
-        $totalUntungCV  = $ritases->sum('total_cv');
+        // Total dari Trip Pulang (Hanya yang Disetujui)
+        $tripPulangs = \App\Models\TripPulang::where('status_approval', 'Disetujui')->get();
+        $totalPendapatan = $tripPulangs->sum('total_pendapatan');
+        $totalGajiSopir = $tripPulangs->sum('total_gaji_sopir');
+        $totalUntungCV  = $tripPulangs->sum('total_cv');
 
         // Total Maintenance
         $maintenances = Maintenance::all();

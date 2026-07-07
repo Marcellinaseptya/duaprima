@@ -9,46 +9,85 @@ use App\Models\NotaBbm;
 use App\Models\NotaPerbaikan;
 use App\Models\Transaksi;
 
+use App\Models\Invoice;
+use App\Models\TripBerangkat;
+
 class KeuanganOwnerController extends Controller
 {
     public function index(Request $request)
     {
-        $bulan = $request->bulan ?? now()->month;
-        $tahun = $request->tahun ?? now()->year;
+        $start_date = $request->start_date ?? now()->startOfMonth()->toDateString();
+        $end_date = $request->end_date ?? now()->endOfMonth()->toDateString();
 
-        // Ambil data pemasukan dari ritase
-        $pemasukan = Ritase::whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun)
+        // 1. Pemasukan (Invoice Lunas)
+        $totalPemasukan = Invoice::where('status', 'sudah_bayar')
+            ->whereBetween('tanggal_invoice', [$start_date, $end_date])
+            ->sum('total_tagihan');
+
+        // 2. Pengeluaran Lapangan (Trip yang disetujui)
+        // Ambil TripPulang yang disetujui
+        $tripPulangs = \App\Models\TripPulang::with('jadwal.tripBerangkat')
+            ->where('status_approval', 'Disetujui')
+            ->whereBetween('waktu_selesai', [$start_date, $end_date])
             ->get();
 
-        $totalPemasukan = $pemasukan->sum(function ($r) {
-            return ($r->muatan_netto * $r->tarif) - $r->biaya_bbm;
-        });
+        $uangJalan = 0;
+        $uangMakan = 0;
+        $totalBbmTrip = 0;
 
-        // Ambil pengeluaran dari nota BBM & perbaikan
-        $totalBbm = NotaBbm::whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->sum('jumlah');
-        $totalPerbaikan = NotaPerbaikan::whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->sum('biaya');
+        foreach ($tripPulangs as $tp) {
+            $totalBbmTrip += $tp->biaya_bbm ?? 0;
+            if ($tp->jadwal && $tp->jadwal->tripBerangkat) {
+                $uangJalan += $tp->jadwal->tripBerangkat->uang_jalan ?? 0;
+                $uangMakan += $tp->jadwal->tripBerangkat->uang_makan ?? 0;
+            } elseif ($tp->jadwal) {
+                // Fallback jika terjadi bug sebelumnya (TripBerangkat tidak terbuat)
+                $uangJalan += $tp->jadwal->uang_jalan ?? 0;
+                
+                // Cari uang makan di tabel transaksi
+                $transaksi = \App\Models\Transaksi::where('kategori', 'trip pulang')
+                    ->whereDate('tanggal', \Carbon\Carbon::parse($tp->waktu_selesai)->format('Y-m-d'))
+                    ->where('keterangan', 'like', "%{$tp->jadwal->masterTruk->plat_nomor}%")
+                    ->first();
+                    
+                if ($transaksi) {
+                    $makan = $transaksi->nominal - ($tp->jadwal->uang_jalan ?? 0) - ($tp->biaya_bbm ?? 0);
+                    $uangMakan += max(0, $makan);
+                }
+            }
+        }
+        $totalTripBiaya = $uangJalan + $uangMakan;
 
-        // Pinjaman sopir (opsional, kalau pakai Transaksi)
+        // 3. Pengeluaran Manual & Perbaikan (Hanya yang disetujui)
+        $totalBbmManual = NotaBbm::where('status', 'Disetujui')
+            ->whereBetween('tanggal', [$start_date, $end_date])
+            ->sum('jumlah');
+        $totalBbm = $totalBbmManual + $totalBbmTrip;
+
+        // Perbaikan: Sum column depends on what column is actually holding the cost.
+        $totalPerbaikan = \App\Models\Maintenance::whereBetween('tanggal_perbaikan', [$start_date, $end_date])
+            ->sum('biaya_servis');
+
+        // 4. Pinjaman sopir
         $totalPinjaman = Transaksi::where('jenis', 'Peminjaman')
-            ->whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun)
+            ->whereBetween('tanggal', [$start_date, $end_date])
             ->sum('jumlah');
 
         // Total pengeluaran
-        $totalPengeluaran = $totalBbm + $totalPerbaikan + $totalPinjaman;
+        $totalPengeluaran = $totalBbm + $totalPerbaikan + $totalPinjaman + $totalTripBiaya;
 
         // Laba bersih
         $labaBersih = $totalPemasukan - $totalPengeluaran;
 
         return view('owner.keuangan.index', compact(
-            'bulan',
-            'tahun',
+            'start_date',
+            'end_date',
             'totalPemasukan',
             'totalPengeluaran',
             'totalBbm',
             'totalPerbaikan',
             'totalPinjaman',
+            'totalTripBiaya',
             'labaBersih'
         ));
     }

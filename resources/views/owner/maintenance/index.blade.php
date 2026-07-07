@@ -46,10 +46,10 @@
                     @forelse ($maintenances as $item)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $item->truk->plat_nomor ?? '-' }}</td>
+                            <td>{{ $item->mastertruk->plat_nomor ?? '-' }}</td>
                             <td>{{ \Carbon\Carbon::parse($item->tanggal_perbaikan)->format('d-m-Y') }}</td>
                             <td>{{ $item->deskripsi_perbaikan }}</td>
-                            <td>Rp{{ number_format($item->biaya, 0, ',', '.') }}</td>
+                            <td>Rp{{ number_format($item->biaya_servis, 0, ',', '.') }}</td>
                             <td>
                                 @if ($item->foto_bukti)
                                     <a href="{{ asset('storage/' . $item->foto_bukti) }}" target="_blank">Lihat</a>

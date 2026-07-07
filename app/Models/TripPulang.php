@@ -19,10 +19,14 @@ class TripPulang extends Model
         'catatan',
         'nota_bbm',
         'waktu_selesai',
+        'tanggal_sampai',
+        'lokasi_tujuan',
+        'km_akhir',
         'total_pendapatan',
         'bonus',
         'total_gaji_sopir',
-        'total_cv'
+        'total_cv',
+        'status_approval'
     ];
 
     /**

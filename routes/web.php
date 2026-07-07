@@ -115,7 +115,12 @@ Route::middleware(['auth'])->group(function () {
 
 // Dan jangan lupa tambahkan rute export agar tidak error saat diklik
 Route::get('/tripberangkat/export', [App\Http\Controllers\Admin\TripBerangkatController::class, 'export'])->name('admin.tripberangkat.export');
+        
+        Route::put('trip-pulang/{tripPulang}/tarif', [TripPulangController::class, 'updateTarif'])->name('admin.trippulang.updateTarif');
+        Route::patch('trip-pulang/{tripPulang}/approve', [TripPulangController::class, 'approve'])->name('admin.trippulang.approve');
+        Route::patch('trip-pulang/{tripPulang}/reject', [TripPulangController::class, 'reject'])->name('admin.trippulang.reject');
         Route::resource('trip-pulang', TripPulangController::class)->names('admin.trippulang');
+        
         Route::get('/ritase', [RitaseController::class, 'index'])->name('admin.ritase.index');
         Route::get('/ritase/export', [RitaseController::class, 'export'])->name('admin.ritase.export');
 
@@ -137,6 +142,9 @@ Route::get('/tripberangkat/export', [App\Http\Controllers\Admin\TripBerangkatCon
 
         Route::get('/laporan-kerusakan', [LaporanKerusakanController::class, 'index'])->name('admin.laporankerusakan.index');
         Route::get('/laporan-kerusakan/export', [LaporanKerusakanController::class, 'exportPdf'])->name('admin.laporankerusakan.export');
+
+        // Faktur (Invoice) UI
+        Route::resource('faktur', App\Http\Controllers\Admin\FakturController::class)->names('admin.faktur');
     });
 
     /*
@@ -159,6 +167,15 @@ Route::get('/tripberangkat/export', [App\Http\Controllers\Admin\TripBerangkatCon
         Route::get('/maintenance-print', [ManajerMaintenanceController::class, 'print'])->name('maintenance.print');
         Route::resource('nota-pengeluaran', ManajerNotaPengeluaranController::class);
         Route::get('/nota-hauling', [ManajerNotaHaulingController::class, 'index'])->name('nota-hauling.index');
+
+        // Trip Pulang & Approval
+        Route::put('trip-pulang/{tripPulang}/tarif', [App\Http\Controllers\Manajer\TripPulangController::class, 'updateTarif'])->name('trippulang.updateTarif');
+        Route::patch('trip-pulang/{tripPulang}/approve', [App\Http\Controllers\Manajer\TripPulangController::class, 'approve'])->name('trippulang.approve');
+        Route::patch('trip-pulang/{tripPulang}/reject', [App\Http\Controllers\Manajer\TripPulangController::class, 'reject'])->name('trippulang.reject');
+        Route::resource('trip-pulang', App\Http\Controllers\Manajer\TripPulangController::class)->names('trippulang');
+
+        // Faktur (Invoice) UI
+        Route::resource('faktur', App\Http\Controllers\Manajer\FakturController::class)->names('faktur');
     });
 
     /*
@@ -179,8 +196,8 @@ Route::get('/tripberangkat/export', [App\Http\Controllers\Admin\TripBerangkatCon
         
         // Trip & Ritase
         Route::get('/trip-berangkat', [SopirTripBerangkatController::class, 'index'])->name('trip-berangkat.index');
-        Route::get('/trip-berangkat/{id}/create', [SopirTripBerangkatController::class, 'create'])->name('trip-berangkat.create');
-        Route::post('/trip-berangkat/{id}/store', [SopirTripBerangkatController::class, 'store'])->name('trip-berangkat.store');
+        Route::get('/trip-berangkat/create', [SopirTripBerangkatController::class, 'create'])->name('trip-berangkat.create');
+        Route::post('/trip-berangkat/store', [SopirTripBerangkatController::class, 'store'])->name('trip-berangkat.store');
         
         Route::get('/trip-pulang', [SopirTripPulangController::class, 'index'])->name('trip-pulang.index');
         Route::get('/trip-pulang/{id}/form', [SopirTripPulangController::class, 'form'])->name('trip-pulang.form');

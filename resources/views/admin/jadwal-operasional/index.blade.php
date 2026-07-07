@@ -8,7 +8,7 @@
     {{-- Header --}}
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <div>
-            <h1 class="h3 mb-0 text-gray-800 font-weight-bold">🗓️ Jadwal Operasional</h1>
+            <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Jadwal Operasional</h1>
             <p class="text-muted small mb-0">Data jadwal yang telah disusun oleh Manajer untuk operasional armada.</p>
         </div>
         <a href="{{ route('admin.jadwal-operasional.export', request()->all()) }}" class="btn btn-danger btn-sm shadow-sm px-3">
@@ -49,8 +49,8 @@
                             <th class="border-0">TANGGAL</th>
                             <th class="border-0">SOPIR & ARMADA</th>
                             <th class="border-0">TUJUAN / KLIEN</th>
-                            <th class="border-0">ESTIMASI JAM</th>
-                            <th class="border-0">CATATAN MANAJER</th>
+                            <th class="border-0">RUTE & KM</th>
+                            <th class="border-0">DETAIL TRIP</th>
                             <th class="border-0">STATUS</th>
                         </tr>
                     </thead>
@@ -75,17 +75,23 @@
                                     </div>
                                 </td>
                                 <td class="text-left">
-                                    <div class="text-dark font-weight-bold">{{ $jadwal->tujuan }}</div>
+                                    <div class="text-dark font-weight-bold">{{ $jadwal->lokasi_berangkat ?? $jadwal->tujuan ?? 'Dibuat Sopir' }}</div>
                                     <div class="text-xs text-primary">{{ $jadwal->klien->nama_perusahaan ?? 'Klien Umum' }}</div>
                                 </td>
-                                <td>
-                                    <div class="badge badge-light border px-2 py-1 font-weight-normal">
-                                        <i class="far fa-clock text-success mr-1"></i> {{ $jadwal->jam_berangkat }} 
-                                        <span class="mx-1">→</span> 
-                                        <i class="far fa-clock text-danger mr-1"></i> {{ $jadwal->jam_kembali ?? '--:--' }}
+                                <td class="text-left">
+                                    <div class="badge badge-light border px-2 py-1 font-weight-normal mb-1 d-block">
+                                        <span class="text-success mr-1">Berangkat:</span> 
+                                        {{ $jadwal->tripBerangkat->lokasi_berangkat ?? '-' }} 
+                                        (KM: {{ $jadwal->tripBerangkat->km_awal ?? '-' }})
+                                    </div>
+                                    <div class="badge badge-light border px-2 py-1 font-weight-normal d-block">
+                                        <span class="text-danger mr-1">Tujuan:</span> 
+                                        {{ $jadwal->tripPulang->lokasi_tujuan ?? '-' }} 
+                                        (KM: {{ $jadwal->tripPulang->km_akhir ?? '-' }})
                                     </div>
                                 </td>
-                                <td class="small text-muted" style="max-width: 200px;">
+                                <td class="small text-muted text-left" style="max-width: 200px;">
+                                    Tgl Sampai: {{ $jadwal->tripPulang->tanggal_sampai ?? '-' }} <br>
                                     {{ $jadwal->catatan ?? '-' }}
                                 </td>
                                 <td>

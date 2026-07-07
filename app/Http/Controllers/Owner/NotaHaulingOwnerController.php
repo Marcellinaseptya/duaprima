@@ -23,7 +23,7 @@ class NotaHaulingOwnerController extends Controller
     public function approve($id)
     {
         $nota = LaporanNotaHauling::findOrFail($id);
-        $nota->status = 'approved';
+        $nota->status = 'APPROVED';
         $nota->save();
 
         return redirect()->back()->with('success', 'Nota berhasil di-approve');
@@ -32,7 +32,7 @@ class NotaHaulingOwnerController extends Controller
     public function reject($id)
     {
         $nota = LaporanNotaHauling::findOrFail($id);
-        $nota->status = 'rejected';
+        $nota->status = 'REJECTED';
         $nota->save();
 
         return redirect()->back()->with('success', 'Nota berhasil ditolak');

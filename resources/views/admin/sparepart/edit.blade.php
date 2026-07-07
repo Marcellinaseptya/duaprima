@@ -36,7 +36,7 @@
 
                 <div class="form-group mb-3">
                     <label>Harga Satuan</label>
-                    <input type="number" name="harga_satuan" class="form-control @error('harga_satuan') is-invalid @enderror"
+                    <input type="text" name="harga_satuan" class="form-control rupiah-input @error('harga_satuan') is-invalid @enderror"
                         value="{{ old('harga_satuan', $sparepart->harga_satuan) }}" min="0" required>
                     @error('harga_satuan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>

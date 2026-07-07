@@ -10,25 +10,29 @@
       <tr>
         <th>Tanggal</th>
         <th>Sopir</th>
-        <th>Truk</th>
-        <th>Jumlah</th>
-        <th>File</th>
+        <th>Keterangan</th>
+        <th>File Bukti</th>
       </tr>
     </thead>
     <tbody>
-      @foreach ($notaBbm as $n)
+      @forelse ($notaBbm as $n)
         <tr>
           <td>{{ \Carbon\Carbon::parse($n->tanggal)->format('d M Y') }}</td>
-          <td>{{ $n->sopir->nama ?? '-' }}</td>
-          <td>{{ $n->truk->plat_nomor ?? '-' }}</td>
-          <td>Rp{{ number_format($n->jumlah) }}</td>
+          <td>{{ $n->sopir->user->nama ?? '-' }}</td>
+          <td>{{ $n->keterangan ?? '-' }}</td>
           <td>
-            @if($n->file)
-              <a href="{{ asset('storage/' . $n->file) }}" target="_blank">Lihat</a>
+            @if($n->file_nota)
+              <a href="{{ asset('storage/' . $n->file_nota) }}" target="_blank">Lihat</a>
+            @else
+              -
             @endif
           </td>
         </tr>
-      @endforeach
+      @empty
+        <tr>
+          <td colspan="4" class="text-center text-muted">Belum ada nota BBM yang diunggah.</td>
+        </tr>
+      @endforelse
     </tbody>
   </table>
 </div>

@@ -92,8 +92,9 @@
                                     $statusClass = [
                                         'DISETUJUI' => 'success',
                                         'PENDING' => 'warning',
+                                        'MENUNGGU' => 'warning',
                                         'DITOLAK' => 'danger'
-                                    ][$laporan->status] ?? 'secondary';
+                                    ][strtoupper($laporan->status)] ?? 'secondary';
                                 @endphp
                                 <span class="badge badge-{{ $statusClass }} px-3 py-2">
                                     <i class="fas fa-circle mr-1 small"></i> {{ $laporan->status }}

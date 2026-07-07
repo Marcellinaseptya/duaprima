@@ -73,7 +73,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text bg-light">Rp</span>
                                         </div>
-                                        <input type="number" name="harga_satuan" id="harga_satuan" class="form-control" placeholder="0" required>
+                                        <input type="text" name="harga_satuan" id="harga_satuan" class="form-control rupiah-input" placeholder="0" required>
                                     </div>
                                 </div>
                             </div>
@@ -147,7 +147,7 @@
 
     function hitungTotal() {
         const j = parseFloat(jumlah.value) || 0;
-        const h = parseFloat(hargaSatuan.value) || 0;
+        const h = parseFloat(hargaSatuan.value.replace(/\./g, '')) || 0;
         const total = j * h;
 
         // Tampilan format ribuan

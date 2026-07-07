@@ -24,9 +24,9 @@
             <!-- Status -->
             <p><strong>Status:</strong> 
                 <span class="badge 
-                    @if($laporan->status == 'PENDING') bg-warning 
-                    @elseif($laporan->status == 'DISETUJUI') bg-success 
-                    @elseif($laporan->status == 'DITOLAK') bg-danger 
+                    @if(strtolower($laporan->status) == 'pending' || strtolower($laporan->status) == 'menunggu') bg-warning 
+                    @elseif(strtolower($laporan->status) == 'disetujui') bg-success 
+                    @elseif(strtolower($laporan->status) == 'ditolak') bg-danger 
                     @endif">
                     {{ ucfirst(strtolower($laporan->status)) }}
                 </span>
@@ -47,7 +47,7 @@
             </p>
 
             <!-- Tombol approve / reject -->
-            @if ($laporan->status == 'PENDING')
+            @if (strtolower($laporan->status) == 'menunggu' || strtolower($laporan->status) == 'pending')
             <div class="mt-4">
                 <form action="{{ route('manajer.kerusakan.setujui', $laporan->id) }}" method="POST" class="d-inline">
                     @csrf
@@ -67,7 +67,7 @@
             @endif
 
             <!-- Tombol buat maintenance -->
-            @if ($laporan->status === 'DISETUJUI' && !$laporan->maintenance)
+            @if (strtolower($laporan->status) === 'disetujui' && !$laporan->maintenance)
             <div class="mt-4">
                 <a href="{{ route('manajer.maintenance.fromLaporan', $laporan->id) }}" class="btn btn-primary">
                     🛠️ Buat Maintenance dari Laporan Ini

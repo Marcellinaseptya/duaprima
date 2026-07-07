@@ -8,11 +8,15 @@ use Illuminate\Http\Request;
 
 class AdminJadwalOperasionalController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $jadwals = JadwalOperasional::with(['sopir', 'truk'])
-        ->latest()
-        ->paginate(10); // <- ini penting
+        $query = JadwalOperasional::with(['sopir', 'truk', 'tripBerangkat', 'tripPulang']);
+
+        if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('tanggal', [$request->tanggal_awal, $request->tanggal_akhir]);
+        }
+
+        $jadwals = $query->latest()->paginate(10)->withQueryString();
     
         return view('admin.jadwal-operasional.index', compact('jadwals'));
     }

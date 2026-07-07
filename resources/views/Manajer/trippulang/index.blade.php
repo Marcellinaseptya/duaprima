@@ -1,5 +1,5 @@
 @extends('layout.main')
-@include('partials.sidebar-admin')
+@include('partials.sidebar-manajer')
 
 @section('title', 'Data Trip Pulang')
 
@@ -130,11 +130,11 @@
                                 <i class="fas fa-coins"></i> Set Tarif
                             </button>
 
-                            <form action="{{ route('admin.trippulang.approve', $trip->id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('manajer.trippulang.approve', $trip->id) }}" method="POST" class="d-inline">
                                 @csrf @method('PATCH')
                                 <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Setujui biaya lapangan ini?')"><i class="fas fa-check"></i> Setujui Biaya</button>
                             </form>
-                            <form action="{{ route('admin.trippulang.reject', $trip->id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('manajer.trippulang.reject', $trip->id) }}" method="POST" class="d-inline">
                                 @csrf @method('PATCH')
                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tolak biaya lapangan ini?')"><i class="fas fa-times"></i> Tolak</button>
                             </form>
@@ -152,7 +152,7 @@
         <div class="modal fade" id="modalTarif-{{ $trip->id }}" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form action="{{ route('admin.trippulang.updateTarif', $trip->id) }}" method="POST">
+                    <form action="{{ route('manajer.trippulang.updateTarif', $trip->id) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="modal-header">

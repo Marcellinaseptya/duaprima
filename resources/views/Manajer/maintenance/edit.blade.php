@@ -48,7 +48,7 @@
 
                 <div class="mb-3">
                     <label for="biaya" class="form-label">Biaya <span class="text-danger">*</span></label>
-                    <input type="number" name="biaya" id="biaya" class="form-control @error('biaya') is-invalid @enderror" value="{{ old('biaya', $maintenance->biaya) }}" required>
+                    <input type="text" name="biaya" id="biaya" class="form-control rupiah-input @error('biaya') is-invalid @enderror" value="{{ old('biaya', $maintenance->biaya) }}" required>
                 </div>
 
                 <div class="mb-3">

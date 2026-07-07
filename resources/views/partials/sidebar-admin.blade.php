@@ -164,9 +164,9 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.invoice.index') }}" class="nav-link {{ request()->routeIs('admin.invoice*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.faktur.index') }}" class="nav-link {{ request()->routeIs('admin.faktur*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Invoice</p>
+                                <p>Data Faktur</p>
                             </a>
                         </li>
                     </ul>

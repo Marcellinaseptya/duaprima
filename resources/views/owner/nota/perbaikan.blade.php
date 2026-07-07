@@ -9,30 +9,30 @@
     <thead>
       <tr>
         <th>Tanggal</th>
-        <th>Truk</th>
         <th>Sopir</th>
-        <th>Jenis</th>
-        <th>Biaya</th>
-        <th>Bukti</th>
+        <th>Keterangan</th>
+        <th>File Bukti</th>
       </tr>
     </thead>
     <tbody>
-      @foreach ($notaPerbaikan as $n)
+      @forelse ($notaPerbaikan as $n)
         <tr>
           <td>{{ \Carbon\Carbon::parse($n->tanggal)->format('d M Y') }}</td>
-          <td>{{ $n->truk->plat_nomor ?? '-' }}</td>
-          <td>{{ $n->sopir->nama ?? '-' }}</td>
-          <td>{{ $n->jenis_perbaikan }}</td>
-          <td>Rp{{ number_format($n->biaya) }}</td>
+          <td>{{ $n->sopir->user->nama ?? '-' }}</td>
+          <td>{{ $n->keterangan ?? '-' }}</td>
           <td>
-            @if($n->bukti_nota)
-              <a href="{{ asset('storage/' . $n->bukti_nota) }}" target="_blank">Lihat</a>
+            @if($n->file_nota)
+              <a href="{{ asset('storage/' . $n->file_nota) }}" target="_blank">Lihat</a>
             @else
               <span class="text-muted">-</span>
             @endif
           </td>
         </tr>
-      @endforeach
+      @empty
+        <tr>
+          <td colspan="4" class="text-center text-muted">Belum ada nota perbaikan yang diunggah.</td>
+        </tr>
+      @endforelse
     </tbody>
   </table>
 </div>

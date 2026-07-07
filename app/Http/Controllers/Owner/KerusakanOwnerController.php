@@ -11,7 +11,7 @@ class KerusakanOwnerController extends Controller
     public function index()
     {
         // Ambil semua laporan kerusakan yang sudah diproses
-        $kerusakan = LaporanKerusakan::whereIn('status', ['Disetujui Manajer', 'Ditolak'])->latest()->get();
+        $kerusakan = LaporanKerusakan::whereIn('status', ['DISETUJUI', 'DITOLAK', 'Disetujui', 'Ditolak'])->latest()->get();
 
         return view('owner.kerusakan.index', compact('kerusakan'));
     }

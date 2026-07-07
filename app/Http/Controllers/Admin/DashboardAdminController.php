@@ -16,8 +16,8 @@ class DashboardAdminController extends Controller
     public function index()
     {
         // Ringkasan
-        $totalPemasukan = Transaksi::where('kategori', 'pemasukan')->sum('jumlah');
-        $totalPengeluaran = Transaksi::where('kategori', 'pengeluaran')->sum('jumlah');
+        $totalPemasukan = \App\Models\Invoice::where('status', 'sudah_bayar')->sum('total_tagihan');
+        $totalPengeluaran = Transaksi::where('jenis', 'pengeluaran')->sum('nominal');
         $totalTrukAktif = MasterTruk::where('status', 'aktif')->count();
         $totalSopirAktif = Sopir::where('status', 'aktif')->count();
         $totalLaporan = LaporanKerusakan::count();
@@ -35,10 +35,9 @@ class DashboardAdminController extends Controller
                 ];
             });
 
-        // Grafik Pengeluaran per kategori
-        $transaksiOperasional = Transaksi::where('kategori','pengeluaran')
-            ->select('keterangan as kategori', DB::raw('SUM(jumlah) as total'))
-            ->groupBy('keterangan')
+        $transaksiOperasional = Transaksi::where('jenis','pengeluaran')
+            ->select('kategori as kategori', DB::raw('SUM(nominal) as total'))
+            ->groupBy('kategori')
             ->get();
 
         // Grafik Laporan Kerusakan per Sopir

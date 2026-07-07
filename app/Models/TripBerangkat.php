@@ -18,6 +18,7 @@ class TripBerangkat extends Model
         'uang_makan', 
         'tanggal_berangkat', 
         'lokasi_berangkat', 
+        'km_awal',
         'waktu_mulai',
         'nota_perjalanan',
         'catatan'

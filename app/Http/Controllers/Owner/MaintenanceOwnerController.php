@@ -23,7 +23,7 @@ class MaintenanceOwnerController extends Controller
             ->get();
 
         // Total biaya maintenance bulan ini
-        $totalBiayaMaintenance = $maintenances->sum('biaya');
+        $totalBiayaMaintenance = $maintenances->sum('biaya_servis');
 
         return view('owner.maintenance.index', compact(
             'maintenances',

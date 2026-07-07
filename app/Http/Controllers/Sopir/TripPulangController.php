@@ -56,8 +56,22 @@ class TripPulangController extends Controller
                 ->with('error', 'Trip ini tidak bisa diisi lagi.');
         }
 
+        // Bersihkan format uang dari titik ribuan
+        if ($request->has('uang_jalan')) {
+            $request->merge(['uang_jalan' => str_replace('.', '', $request->uang_jalan)]);
+        }
+        if ($request->has('uang_makan')) {
+            $request->merge(['uang_makan' => str_replace('.', '', $request->uang_makan)]);
+        }
+        if ($request->has('biaya_bbm')) {
+            $request->merge(['biaya_bbm' => str_replace('.', '', $request->biaya_bbm)]);
+        }
+
         // Validasi input
         $request->validate([
+            'tanggal_sampai' => 'required|date',
+            'lokasi_tujuan' => 'required|string|max:255',
+            'km_akhir' => 'required|numeric',
             'muatan_netto' => 'required|numeric|min:0',
             'ritase' => 'required|numeric|min:1',
             'uang_jalan' => 'required|numeric|min:0',
@@ -112,6 +126,9 @@ class TripPulangController extends Controller
                 'catatan' => $request->catatan,
                 'nota_bbm' => $notaPath,
                 'waktu_selesai' => now(),
+                'tanggal_sampai' => $request->tanggal_sampai,
+                'lokasi_tujuan' => $request->lokasi_tujuan,
+                'km_akhir' => $request->km_akhir,
             ], $gaji)
         );
 

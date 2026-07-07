@@ -89,8 +89,26 @@
                                 $rit = $trip->ritase;
                                 $tarif = $trip->tarif_per_rit;
                                 $bbm = $trip->biaya_bbm ?? 0;
-                                $uang_makan = $trip->uang_makan ?? 0;
-                                $uang_jalan = $trip->uang_jalan ?? 0;
+                                
+                                $uang_makan = 0;
+                                $uang_jalan = 0;
+                                if ($trip->jadwal && $trip->jadwal->tripBerangkat) {
+                                    $uang_jalan = $trip->jadwal->tripBerangkat->uang_jalan ?? 0;
+                                    $uang_makan = $trip->jadwal->tripBerangkat->uang_makan ?? 0;
+                                } elseif ($trip->jadwal) {
+                                    $uang_jalan = $trip->jadwal->uang_jalan ?? 0;
+                                    
+                                    // Fallback cari di transaksi
+                                    $transaksi = \App\Models\Transaksi::where('kategori', 'trip pulang')
+                                        ->whereDate('tanggal', \Carbon\Carbon::parse($trip->waktu_selesai)->format('Y-m-d'))
+                                        ->where('keterangan', 'like', '%' . ($trip->jadwal->mastertruk->plat_nomor ?? '') . '%')
+                                        ->first();
+                                    if ($transaksi) {
+                                        $makan = $transaksi->nominal - $uang_jalan - $bbm;
+                                        $uang_makan = max(0, $makan);
+                                    }
+                                }
+
                                 $bonus = $muatan > 11500 ? 60000 : 0;
                                 
                                 $total_bersih = ($rit * $tarif + $bonus + $uang_makan + $uang_jalan) - $bbm;
@@ -120,7 +138,7 @@
                                 <td class="font-weight-bold text-dark bg-gray-100">Rp{{ number_format($untung_cv) }}</td>
                                 <td>
                                     @if($trip->nota_bbm)
-                                        <a href="{{ asset('uploads/nota_bbm/'.$trip->nota_bbm) }}" target="_blank" class="btn btn-xs btn-info shadow-sm p-1 rounded-circle" title="Lihat Nota">
+                                        <a href="{{ asset('storage/'.$trip->nota_bbm) }}" target="_blank" class="btn btn-xs btn-info shadow-sm p-1 rounded-circle" title="Lihat Nota">
                                             <i class="fas fa-camera fa-xs text-white px-1"></i>
                                         </a>
                                     @else

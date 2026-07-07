@@ -36,9 +36,9 @@
                             <td>{{ \Illuminate\Support\Str::limit($item->deskripsi_kerusakan, 50) }}</td>
                             <td>
                                 <span class="badge
-                                    @if($item->status == 'PENDING') bg-warning
-                                    @elseif($item->status == 'DISETUJUI') bg-success
-                                    @elseif($item->status == 'DITOLAK') bg-danger
+                                    @if(strtolower($item->status) == 'pending' || strtolower($item->status) == 'menunggu') bg-warning
+                                    @elseif(strtolower($item->status) == 'disetujui') bg-success
+                                    @elseif(strtolower($item->status) == 'ditolak') bg-danger
                                     @else bg-secondary
                                     @endif">
                                     {{ ucfirst(strtolower($item->status)) }}

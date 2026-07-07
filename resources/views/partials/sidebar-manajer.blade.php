@@ -44,8 +44,21 @@
   </a>
 </li>
 
+<li class="nav-item">
+  <a href="{{ route('manajer.trippulang.index') }}" class="nav-link">
+    <i class="fas fa-truck-loading nav-icon"></i>
+    <p>Data Trip Pulang</p>
+  </a>
+</li>
+
         {{-- NOTA & PENGELUARAN --}}
         <li class="nav-header">NOTA SOPIR</li>
+        <li class="nav-item">
+          <a href="{{ route('manajer.faktur.index') }}" class="nav-link">
+            <i class="fas fa-file-invoice nav-icon"></i>
+            <p>Data Faktur</p>
+          </a>
+        </li>
         <li class="nav-item">
           <a href="{{ route('manajer.nota-hauling.index') }}" class="nav-link">
             <i class="fas fa-file-invoice-dollar nav-icon"></i>

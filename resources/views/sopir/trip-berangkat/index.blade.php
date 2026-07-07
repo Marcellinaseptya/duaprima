@@ -6,10 +6,22 @@
 @section('content')
 <div class="container-fluid py-4">
     {{-- Header --}}
-    <div class="mb-4">
-        <h3 class="font-weight-bold text-dark"><i class="fas fa-route text-primary mr-2"></i> Daftar Trip Siap Berangkat</h3>
-        <p class="text-muted">Pilih jadwal di bawah ini untuk memulai pengiriman Anda hari ini.</p>
+    <div class="d-flex justify-content-between mb-4 align-items-center">
+        <div>
+            <h3 class="font-weight-bold text-dark"><i class="fas fa-route text-primary mr-2"></i> Daftar Trip Berangkat</h3>
+            <p class="text-muted mb-0">Mulai perjalanan baru Anda di sini.</p>
+        </div>
+        <a href="{{ route('sopir.trip-berangkat.create') }}" class="btn btn-primary shadow-sm font-weight-bold">
+            <i class="fas fa-plus-circle mr-2"></i> BUAT PERJALANAN BARU
+        </a>
     </div>
+
+    @if(session('success'))
+        <div class="alert alert-success mb-3">{{ session('success') }}</div>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-danger mb-3">{{ session('error') }}</div>
+    @endif
 
     <div class="row">
         @forelse($jadwals as $jadwal)
@@ -26,9 +38,9 @@
                                     <span class="badge badge-pill badge-warning px-3">{{ $jadwal->status }}</span>
                                 </div>
 
-                                {{-- Detail Klien --}}
+                                {{-- Detail --}}
                                 <div class="h5 mb-1 font-weight-bold text-gray-800">
-                                    {{ $jadwal->klien->nama_perusahaan ?? 'Klien Umum' }}
+                                    {{ $jadwal->lokasi_berangkat ?? 'Dari Pool' }}
                                 </div>
                                 
                                 {{-- Detail Truk --}}
@@ -36,12 +48,15 @@
                                     <i class="fas fa-truck mr-1"></i> Plat Nomor: 
                                     <span class="font-weight-bold text-dark">{{ $jadwal->mastertruk->plat_nomor ?? '-' }}</span>
                                 </div>
-
-                                {{-- Tombol Aksi --}}
-                                <a href="{{ route('sopir.trip-berangkat.create', $jadwal->id) }}" 
-                                   class="btn btn-success btn-block shadow-sm font-weight-bold">
-                                    <i class="fas fa-play-circle mr-2"></i> MULAI PERJALANAN
-                                </a>
+                                
+                                @if($jadwal->status === 'Siap Berangkat')
+                                    <form action="{{ route('sopir.jadwal.mulai', $jadwal->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-sm w-100 font-weight-bold shadow-sm">
+                                            <i class="fas fa-play mr-1"></i> MULAI PERJALANAN
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -52,8 +67,8 @@
                 <div class="mb-3">
                     <i class="fas fa-box-open fa-4x text-light"></i>
                 </div>
-                <h5 class="text-muted">Tidak ada jadwal perjalanan untuk saat ini.</h5>
-                <p class="small text-muted">Silakan hubungi Admin atau Manajer untuk pembagian jadwal.</p>
+                <h5 class="text-muted">Anda belum memiliki trip hari ini.</h5>
+                <p class="small text-muted">Klik tombol "Buat Perjalanan Baru" di atas untuk memulai trip perdana Anda.</p>
             </div>
         @endforelse
     </div>

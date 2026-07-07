@@ -25,7 +25,7 @@ class MaintenanceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'mastertruk_id'        => 'required|exists:mastertruk,id',
+            'mastertruk_id'        => 'required|exists:master_truk,id',
             'tanggal_perbaikan'    => 'required|date',
             'deskripsi_perbaikan'  => 'required|string',
             'biaya_servis'                => 'required|numeric',

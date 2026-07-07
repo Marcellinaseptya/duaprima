@@ -96,5 +96,45 @@
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
 @stack('scripts')
+<script>
+$(document).ready(function() {
+    // Fungsi untuk memformat angka dengan pemisah ribuan (titik)
+    function formatRupiah(angka) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return rupiah;
+    }
+
+    // Format saat mengetik
+    $(document).on('keyup', '.rupiah-input', function(e) {
+        $(this).val(formatRupiah($(this).val()));
+    });
+
+    // Format nilai awal jika sudah ada (saat edit)
+    $('.rupiah-input').each(function() {
+        if ($(this).val()) {
+            $(this).val(formatRupiah($(this).val()));
+        }
+    });
+
+    // Hapus format titik sebelum form disubmit
+    $('form').on('submit', function() {
+        $(this).find('.rupiah-input').each(function() {
+            var rawValue = $(this).val().replace(/\./g, '');
+            $(this).val(rawValue);
+        });
+    });
+});
+</script>
 </body>
 </html>

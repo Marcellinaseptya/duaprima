@@ -81,7 +81,7 @@
                                 <td class="small italic text-muted">"{{ Str::limit($jadwal->catatan, 30) ?? '-' }}"</td>
                                 <td>
                                     @if($jadwal->nota_perjalanan)
-                                        <a href="{{ asset('uploads/nota_perjalanan/'.$jadwal->nota_perjalanan) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <a href="{{ asset('storage/'.$jadwal->nota_perjalanan) }}" target="_blank" class="btn btn-sm btn-outline-primary">
                                             <i class="fas fa-eye mr-1"></i> Nota
                                         </a>
                                     @else

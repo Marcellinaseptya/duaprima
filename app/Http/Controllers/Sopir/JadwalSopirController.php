@@ -34,6 +34,25 @@ class JadwalSopirController extends Controller
             'waktu_mulai' => now(),
         ]);
 
+        if ($jadwal->tripBerangkat) {
+            $jadwal->tripBerangkat->update([
+                'waktu_mulai' => now(),
+            ]);
+        } else {
+            // Buat TripBerangkat baru jika Admin yang buat jadwal
+            \App\Models\TripBerangkat::create([
+                'jadwal_id'         => $jadwal->id,
+                'sopir_id'          => $jadwal->sopir_id,
+                'uang_jalan'        => 0,
+                'uang_makan'        => 0,
+                'tanggal_berangkat' => $jadwal->tanggal ?? now()->toDateString(),
+                'lokasi_berangkat'  => $jadwal->lokasi_berangkat ?? '-',
+                'km_awal'           => 0,
+                'waktu_mulai'       => now(),
+                'catatan'           => $jadwal->catatan,
+            ]);
+        }
+
         return redirect()->back()->with('success', 'Perjalanan dimulai.');
     }
 

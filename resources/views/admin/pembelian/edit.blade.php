@@ -51,7 +51,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="font-weight-bold">Harga Satuan <span class="text-danger">*</span></label>
-                                            <input type="number" name="harga_satuan" id="harga_satuan" class="form-control" 
+                                            <input type="text" name="harga_satuan" id="harga_satuan" class="form-control rupiah-input" 
                                                    value="{{ old('harga_satuan', $pembelian->harga_satuan) }}" required>
                                         </div>
                                     </div>
@@ -75,7 +75,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="font-weight-bold text-success">Total Harga (Rp) <span class="text-danger">*</span></label>
-                                            <input type="number" step="0.01" name="harga_total" id="harga_total" class="form-control font-weight-bold" 
+                                            <input type="text" name="harga_total" id="harga_total" class="form-control font-weight-bold rupiah-input" 
                                                    value="{{ old('harga_total', $pembelian->harga_total) }}" readonly required>
                                         </div>
                                     </div>
@@ -137,8 +137,10 @@
     const hargaTotal = document.getElementById('harga_total');
 
     function hitungTotal() {
-        const total = (hargaSatuan.value || 0) * (jumlah.value || 0);
-        hargaTotal.value = total;
+        const hs = parseFloat(hargaSatuan.value.replace(/\./g, '')) || 0;
+        const j = parseFloat(jumlah.value) || 0;
+        const total = hs * j;
+        hargaTotal.value = new Intl.NumberFormat('id-ID').format(total);
     }
 
     hargaSatuan.addEventListener('input', hitungTotal);

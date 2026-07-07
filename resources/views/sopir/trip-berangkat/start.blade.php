@@ -30,13 +30,13 @@
             <!-- Uang Jalan -->
             <div class="mb-3">
                 <label class="form-label">Uang Jalan (Rp)</label>
-                <input type="number" class="form-control" name="uang_jalan" required>
+                <input type="text" class="form-control rupiah-input" name="uang_jalan" required>
             </div>
 
             <!-- Uang Makan -->
             <div class="mb-3">
                 <label class="form-label">Uang Makan (Rp)</label>
-                <input type="number" class="form-control" name="uang_makan" required>
+                <input type="text" class="form-control rupiah-input" name="uang_makan" required>
             </div>
 
             <!-- Catatan -->

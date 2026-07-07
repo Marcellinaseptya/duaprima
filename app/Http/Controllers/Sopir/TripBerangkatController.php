@@ -27,70 +27,60 @@ class TripBerangkatController extends Controller
         return view('sopir.trip-berangkat.index', compact('jadwals'));
     }
 
-    // CREATE → form isi data sebelum mulai trip
-    public function create($id)
+    // CREATE → form isi data sebelum mulai trip (Mandiri)
+    public function create()
     {
-        $jadwal = JadwalOperasional::with(['mastertruk','klien'])->findOrFail($id);
+        $sopir = Auth::user()->sopir;
+        if (!$sopir) return redirect()->back()->with('error', 'Data sopir tidak ditemukan.');
 
-        if ($jadwal->sopir_id !== Auth::user()->sopir->id) {
-            return redirect()->route('sopir.trip-berangkat.index')
-                             ->with('error', 'Anda tidak bisa memulai trip ini.');
-        }
+        $kliens = \App\Models\Klien::where('status', 'Aktif')->get();
 
-        return view('sopir.trip-berangkat.create', compact('jadwal'));
+        return view('sopir.trip-berangkat.create', compact('kliens'));
     }
 
-    // STORE → simpan data form & update status jadi BERANGKAT
-    public function store(Request $request, $id)
+    // STORE → simpan data form & buat JadwalOperasional otomatis
+    public function store(Request $request)
     {
         $request->validate([
+            'tanggal_berangkat' => 'required|date',
             'lokasi_berangkat' => 'required|string|max:255',
-            'uang_jalan'       => 'nullable|numeric',
-            'uang_makan'       => 'nullable|numeric',
+            'km_awal'          => 'required|numeric',
+            'klien_id'         => 'nullable|exists:klien,id',
             'catatan'          => 'nullable|string',
-            'nota_perjalanan'  => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
-        $jadwal = JadwalOperasional::findOrFail($id);
+        $sopir = Auth::user()->sopir;
 
-        if ($jadwal->sopir_id !== Auth::user()->sopir->id) {
+        if (!$sopir || !$sopir->mastertruk_id) {
             return redirect()->route('sopir.trip-berangkat.index')
-                             ->with('error', 'Anda tidak bisa memulai trip ini.');
+                             ->with('error', 'Anda belum ditugaskan ke truk tertentu.');
         }
 
-        $filename = null;
-        if ($request->hasFile('nota_perjalanan')) {
-            $file = $request->file('nota_perjalanan');
-            $filename = time().'_'.$file->getClientOriginalName();
-            $file->move(public_path('uploads/nota_perjalanan'), $filename);
-        }
-
-        // simpan data ke jadwal_operasional (tanpa uang_makan)
-        $jadwal->update([
+        // 1. Buat Jadwal Operasional Otomatis
+        $jadwal = JadwalOperasional::create([
+            'tanggal'          => $request->tanggal_berangkat,
+            'sopir_id'         => $sopir->id,
+            'mastertruk_id'    => $sopir->mastertruk_id,
+            'klien_id'         => $request->klien_id, // Disimpan sesuai input dropdown
             'lokasi_berangkat' => $request->lokasi_berangkat,
-            'uang_jalan'       => $request->uang_jalan,
             'catatan'          => $request->catatan,
-            'waktu_mulai'      => Carbon::now(),
-            'status'           => 'Berangkat',
-            'nota_perjalanan'  => $filename ?? $jadwal->nota_perjalanan
+            'status'           => 'Siap Berangkat',
         ]);
 
-        // simpan record ke tabel trip_berangkat
-        \App\Models\TripBerangkat::updateOrCreate(
-            ['jadwal_id' => $jadwal->id],
-            [
-                'sopir_id' => $jadwal->sopir_id,
-                'uang_jalan' => $request->uang_jalan ?? 0,
-                'uang_makan' => $request->uang_makan ?? 0,
-                'tanggal_berangkat' => Carbon::now()->format('Y-m-d'),
-                'lokasi_berangkat' => $request->lokasi_berangkat,
-                'waktu_mulai' => Carbon::now(),
-                'nota_perjalanan' => $filename,
-                'catatan' => $request->catatan,
-            ]
-        );
+        // 2. Buat record Trip Berangkat
+        \App\Models\TripBerangkat::create([
+            'jadwal_id'         => $jadwal->id,
+            'sopir_id'          => $sopir->id,
+            'uang_jalan'        => 0, // default jika sopir bikin sendiri
+            'uang_makan'        => 0,
+            'tanggal_berangkat' => $request->tanggal_berangkat,
+            'lokasi_berangkat'  => $request->lokasi_berangkat,
+            'km_awal'           => $request->km_awal,
+            'waktu_mulai'       => Carbon::now(),
+            'catatan'           => $request->catatan,
+        ]);
 
         return redirect()->route('sopir.trip-berangkat.index')
-                         ->with('success', 'Trip berhasil dimulai!');
+                         ->with('success', 'Trip berhasil dimulai secara mandiri!');
     }
 }

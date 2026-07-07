@@ -5,7 +5,12 @@
 
 @section('content')
 <div class="container-fluid mt-3">
-    <h1 class="mb-3">Data Maintenance</h1>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="m-0">Data Maintenance</h1>
+        <a href="{{ route('admin.maintenance.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus mr-1"></i> Tambah Data
+        </a>
+    </div>
 
     {{-- Notifikasi Sukses --}}
     @if(session('success'))

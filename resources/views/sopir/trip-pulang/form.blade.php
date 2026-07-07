@@ -5,10 +5,19 @@
 
 @section('content')
 <div class="container mt-4">
-    <h3>📝 Form Pulang Trip</h3>
+    <h3>Form Pulang Trip</h3>
     <p class="text-muted">Lengkapi data berikut setelah perjalanan selesai.</p>
 
     <div class="card shadow-sm p-4">
+        @if ($errors->any())
+            <div class="alert alert-danger border-0 shadow-sm">
+                <ul class="mb-0 font-weight-bold">
+                    @foreach ($errors->all() as $error)
+                        <li><i class="fas fa-exclamation-circle mr-2"></i> {{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <form action="{{ route('sopir.trip-pulang.store', $jadwal->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
 
@@ -26,6 +35,24 @@
                        value="{{ $jadwal->mastertruk->plat_nomor ?? '-' }}" disabled>
             </div>
 
+            <!-- Tanggal Sampai -->
+            <div class="mb-3">
+                <label class="form-label">Tanggal Sampai</label>
+                <input type="date" name="tanggal_sampai" class="form-control" value="{{ date('Y-m-d') }}" required>
+            </div>
+
+            <!-- Lokasi Tujuan -->
+            <div class="mb-3">
+                <label class="form-label">Lokasi Tujuan (Kedatangan)</label>
+                <input type="text" name="lokasi_tujuan" class="form-control" placeholder="Contoh: Tambang Batu Bara" required>
+            </div>
+
+            <!-- KM Akhir -->
+            <div class="mb-3">
+                <label class="form-label">KM Akhir Truk</label>
+                <input type="number" name="km_akhir" class="form-control" placeholder="Contoh: 154250" required>
+            </div>
+
             <!-- Muatan Netto -->
             <div class="mb-3">
                 <label class="form-label">Muatan Netto (Kg)</label>
@@ -41,19 +68,19 @@
             <!-- Uang Jalan -->
             <div class="mb-3">
                 <label class="form-label">Uang Jalan (Rp)</label>
-                <input type="number" name="uang_jalan" class="form-control" placeholder="Contoh: 50000" required>
+                <input type="text" name="uang_jalan" class="form-control rupiah-input" placeholder="Contoh: 50.000" required>
             </div>
 
             <!-- Uang Makan -->
             <div class="mb-3">
                 <label class="form-label">Uang Makan (Rp)</label>
-                <input type="number" name="uang_makan" class="form-control" placeholder="Contoh: 30000" required>
+                <input type="text" name="uang_makan" class="form-control rupiah-input" placeholder="Contoh: 30.000" required>
             </div>
 
             <!-- Harga BBM -->
             <div class="mb-3">
                 <label class="form-label">Harga BBM (Rp)</label>
-                <input type="number" name="biaya_bbm" class="form-control" placeholder="Opsional">
+                <input type="text" name="biaya_bbm" class="form-control rupiah-input" placeholder="Opsional">
             </div>
 
             <!-- Catatan -->
@@ -70,7 +97,7 @@
             </div>
 
             <div class="mt-4">
-                <button type="submit" class="btn btn-primary">🚚 Selesaikan Trip</button>
+                <button type="submit" class="btn btn-primary">Selesaikan Trip</button>
                 <a href="{{ route('sopir.trip-pulang.index') }}" class="btn btn-secondary">Kembali</a>
             </div>
         </form>

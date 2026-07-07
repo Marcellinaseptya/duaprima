@@ -20,12 +20,15 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
-    {view()->composer('*', function ($view) {
-        $view->with('totalKerusakanMenunggu', \App\Models\LaporanKerusakan::where('status', 'Menunggu Validasi')->count());
-        $view->with('totalNotaBbmMenunggu', \App\Models\NotaBbm::where('status', 'Menunggu Validasi')->count());
+    {
+        \Illuminate\Pagination\Paginator::useBootstrapFive();
 
-        // Total semua nota:
-        $view->with('totalNotaMenunggu', $view->totalNotaBbmMenunggu); // tambah hauling, perbaikan kalau ada
-    });
+        view()->composer('*', function ($view) {
+            $view->with('totalKerusakanMenunggu', \App\Models\LaporanKerusakan::where('status', 'Menunggu Validasi')->count());
+            $view->with('totalNotaBbmMenunggu', \App\Models\NotaBbm::where('status', 'Menunggu Validasi')->count());
+
+            // Total semua nota:
+            $view->with('totalNotaMenunggu', $view->totalNotaBbmMenunggu); // tambah hauling, perbaikan kalau ada
+        });
     }
 }
